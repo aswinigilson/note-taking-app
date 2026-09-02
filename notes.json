@@ -1,0 +1,19 @@
+[
+    {
+        "title": "Shopping List",
+        "content": "Buy milk, eggs, bread",
+        "tags": [
+            "personal"
+        ],
+        "timestamp": "2026-09-02T15:45:31.839722"
+    },
+    {
+        "title": "Python Assignment",
+        "content": "Complete Note Taking",
+        "tags": [
+            "work",
+            "college"
+        ],
+        "timestamp": "2026-09-02T15:46:42.373828"
+    }
+]
