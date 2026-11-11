@@ -1,3 +1,4 @@
+
 from note_manager import Note, save_notes, load_notes
 
 
@@ -23,7 +24,11 @@ def add_note(notes):
     tag_input = input("Enter tags (comma-separated): ").strip()
 
     if tag_input:
-        tags = [tag.strip() for tag in tag_input.split(",")]
+        tags = [
+            tag.strip()
+            for tag in tag_input.split(",")
+            if tag.strip()
+        ]
     else:
         tags = []
 
@@ -32,7 +37,7 @@ def add_note(notes):
 
     save_notes(notes)
 
-    print("\nNote added successfully!")
+    print("Note added and saved successfully")
 
 
 def view_notes(notes):
@@ -52,6 +57,8 @@ def search_notes(notes):
 
     term = input("Enter search keyword: ").strip()
 
+    print("\nSearch Results")
+
     found = False
 
     for index, note in enumerate(notes, start=1):
@@ -61,7 +68,7 @@ def search_notes(notes):
             found = True
 
     if not found:
-        print("No matching notes found.")
+        print("No notes found matching")
 
 
 def delete_note(notes):
@@ -73,15 +80,24 @@ def delete_note(notes):
 
     view_notes(notes)
 
+    user_input = input(
+        "Enter note number to delete (or cancel): "
+    ).strip()
+
+    if user_input.lower() == "cancel":
+        print("Deletion cancelled")
+        return
+
     try:
-        number = int(input("Enter note number to delete: "))
+        number = int(user_input)
 
         if 1 <= number <= len(notes):
-            deleted_note = notes.pop(number - 1)
+            notes.pop(number - 1)
 
             save_notes(notes)
 
-            print(f"Deleted note: {deleted_note.title}")
+            print("Note deleted and changes saved successfully")
+
         else:
             print("Invalid note number.")
 
@@ -94,10 +110,16 @@ def filter_by_tag(notes):
 
     tag = input("Enter tag: ").strip().lower()
 
+    print(f"\nNotes with tag '{tag}'")
+
     found = False
 
     for index, note in enumerate(notes, start=1):
-        if any(note_tag.lower() == tag for note_tag in note.tags):
+
+        if any(
+            note_tag.lower() == tag
+            for note_tag in note.tags
+        ):
             print(f"\nNote #{index}")
             note.display()
             found = True
@@ -107,11 +129,13 @@ def filter_by_tag(notes):
 
 
 def main():
+
     notes = load_notes()
 
     print("Notes loaded successfully.")
 
     while True:
+
         display_menu()
 
         choice = input("Enter your choice: ").strip()

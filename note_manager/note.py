@@ -1,11 +1,13 @@
+
 from datetime import datetime
 
 
 class Note:
+
     def __init__(self, title, content, tags, timestamp=None):
         self.title = title
         self.content = content
-        self.tags = tags
+        self.tags = tags if tags else []
         self.timestamp = timestamp or datetime.now().isoformat()
 
     def save(self):
@@ -21,7 +23,12 @@ class Note:
         print()
         print(f"Timestamp: {self.timestamp}")
         print()
-        print(f"Tags: {', '.join(self.tags)}")
+
+        if self.tags:
+            print(f"Tags: {', '.join(self.tags)}")
+        else:
+            print("No tags")
+
         print()
         print(f"Content: {self.content}")
         print()

@@ -1,8 +1,10 @@
+
 import json
+from pathlib import Path
 from .note import Note
 
 
-FILE_NAME = "notes.json"
+FILE_NAME = Path(__file__).resolve().parent.parent / "notes.json"
 
 
 def save_notes(notes_list):
@@ -12,7 +14,7 @@ def save_notes(notes_list):
         with open(FILE_NAME, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4)
 
-    except OSError as error:
+    except (OSError, TypeError) as error:
         print(f"Error saving notes: {error}")
 
 
@@ -21,15 +23,20 @@ def load_notes():
         with open(FILE_NAME, "r", encoding="utf-8") as file:
             data = json.load(file)
 
+        if not isinstance(data, list):
+            raise ValueError("Invalid notes data format")
+
         notes = []
 
         for item in data:
+
             note = Note(
-                item["title"],
-                item["content"],
-                item["tags"],
-                item["timestamp"]
+                title=item["title"],
+                content=item["content"],
+                tags=item.get("tags", []),
+                timestamp=item.get("timestamp")
             )
+
             notes.append(note)
 
         return notes
@@ -41,6 +48,6 @@ def load_notes():
         print("Warning: notes.json is corrupted. Starting with empty notes.")
         return []
 
-    except (OSError, KeyError, TypeError):
+    except (OSError, KeyError, TypeError, ValueError):
         print("Warning: Unable to load notes. Starting with empty notes.")
         return []
